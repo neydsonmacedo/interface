@@ -18,11 +18,10 @@ public class ContractService {
 	public void processContract(Contract contract,Integer months) {
 		double parcela = contract.getTotalValue() / months;
 		for (int i = 1; i <= months;i++) {
-			double amount = parcela + (parcela * 0.01 * i);
-			double paymentFee = onlinePaymentService.paymentFee(amount);
 			double interest = onlinePaymentService.interest(parcela,i);
-			double amountInstallments = amount + paymentFee;
-			contract.setInstallments(new Installment(contract.getDate().plusMonths(i),amountInstallments));
+			double paymentFee = onlinePaymentService.paymentFee(parcela + interest);			
+			double amount = parcela + interest + paymentFee;
+			contract.setInstallments(new Installment(contract.getDate().plusMonths(i),amount));
 			
 			amount = 0.0;
 			
